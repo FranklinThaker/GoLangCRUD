@@ -1,9 +1,5 @@
 package models
 
-import (
-// "github.com/jinzhu/gorm"
-)
-
 type Student struct {
 	ID     int    `gorm:"AUTO_INCREMENT;PRIMARY_KEY;not null"`
 	Fname  string `gorm:"type:varchar(100)"`

@@ -9,7 +9,12 @@ import (
 	"log"
 	"net/http"
 	// "strconv"
+	jwt "github.com/dgrijalva/jwt-go"
+	// "io/ioutil"
+	"time"
 )
+
+var mySigningKey = []byte("captainjacksparrowsayshi")
 
 func SetupResponse(w *http.ResponseWriter, req *http.Request) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
@@ -113,4 +118,33 @@ func Search(res http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(res).Encode(Stud.Value)
 	log.Println("Data OF Single Student")
 	defer db.Close()
+}
+
+func GenerateJWT() (string, error) {
+	token := jwt.New(jwt.SigningMethodHS256)
+
+	claims := token.Claims.(jwt.MapClaims)
+
+	claims["authorized"] = true
+	claims["client"] = "Elliot Forbes"
+	claims["exp"] = time.Now().Add(time.Minute * 30).Unix()
+
+	tokenString, err := token.SignedString(mySigningKey)
+
+	if err != nil {
+		fmt.Errorf("Something Went Wrong: %s", err.Error())
+		return "", err
+	}
+
+	return tokenString, nil
+}
+
+func Login(res http.ResponseWriter, req *http.Request) {
+	validToken, err := GenerateJWT()
+	fmt.Println("1")
+	if err != nil {
+		fmt.Println("Failed to generate token")
+	}
+	fmt.Println("2", validToken)
+	req.Header.Set("Token", validToken)
 }

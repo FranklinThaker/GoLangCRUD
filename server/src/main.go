@@ -1,12 +1,11 @@
 package main
 
 import (
-	"net/http"
-	// "fmt"
 	"CRUD_DEMO/server/src/medium"
 	"CRUD_DEMO/server/src/migrations"
-	// "github.com/urfave/negroni"
+	// "fmt"
 	"log"
+	"net/http"
 	"os"
 )
 
